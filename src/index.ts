@@ -43,10 +43,13 @@ import {
     getTransactionReceiptUtil,
     getWalletUtil,
     shortStringToBigIntUtil,
-    getBlockUtil
+    getBlockUtil,
+    uint256ToBigIntUtil,
+    bigIntToUint256Util
 } from "./extend-utils";
 import { DevnetUtils } from "./devnet-utils";
 import { IntegratedDevnet } from "./devnet";
+import { Uint256 } from "./types";
 
 exitHook(() => {
     IntegratedDevnet.cleanAll();
@@ -219,6 +222,14 @@ extendEnvironment((hre) => {
         bigIntToShortString: (convertableBigInt) => {
             const convertedBigInt = bigIntToShortStringUtil(convertableBigInt);
             return convertedBigInt;
+        },
+
+        uint256toBigInt: (uint256: Uint256) => {
+            return uint256ToBigIntUtil(uint256);
+        },
+
+        bigIntToUint256: (bigInt: BigInt) => {
+            return bigIntToUint256Util(bigInt);
         },
 
         getWallet: (name) => {

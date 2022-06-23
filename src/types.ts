@@ -65,6 +65,11 @@ export interface StarknetContractConfig {
 
 export type Numeric = number | bigint;
 
+export interface Uint256 {
+    low: Numeric;
+    high: Numeric;
+}
+
 /**
  * Object whose keys are strings (names) and values are any object.
  */

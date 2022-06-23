@@ -6,7 +6,8 @@ import {
     DeployAccountOptions,
     StarknetContract,
     StarknetContractFactory,
-    StringMap
+    StringMap,
+    Uint256
 } from "./types";
 import { StarknetWrapper } from "./starknet-wrappers";
 import {
@@ -161,17 +162,31 @@ declare module "hardhat/types/runtime" {
              *
              * This function converts such a short string (max 31 characters) to its felt representation (wrapped in a `BigInt`).
              * Only accepts standard ASCII characters, i.e. characters with charcode between 0 and 127, inclusive.
-             * @param input the input short string
+             * @param convertableString the input short string
              * @returns the numeric equivalent of the input short string, wrapped in a `BigInt`
              */
             shortStringToBigInt: (convertableString: string) => BigInt;
 
             /**
              * Converts a BigInt to a string. The opposite of {@link shortStringToBigInt}.
-             * @param input the input BigInt
+             * @param convertableBigInt the input BigInt
              * @returns a string which is the result of converting a BigInt's hex value to its ASCII equivalent
              */
             bigIntToShortString: (convertableBigInt: BigInt) => string;
+
+            /**
+             * Converts a Uint256 to a bigint. The opposite of {@link bigIntToUint256}.
+             * @param uint256 the input uint256 to be converted
+             * @returns the corresponding bigInt value
+             */
+            uint256toBigInt: (uint256: Uint256) => BigInt;
+
+            /**
+             * Converts a bigint to Uint256. The opposite of {@link uint256ToBigInt}.
+             * @param bigInt the input to be converted
+             * @returns the corresponding Uint256 value
+             */
+            bigIntToUint256: (bigInt: BigInt) => Uint256;
 
             /**
              * The selected starknet-network name.

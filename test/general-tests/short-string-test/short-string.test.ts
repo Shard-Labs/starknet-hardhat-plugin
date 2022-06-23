@@ -17,22 +17,22 @@ describe("Starknet", function () {
     const invalidCharacterString = "invalid char ÿ";
     const multipleInvalidCharactersString = "invaliđ čarđ";
 
-    it("should convert a valid string to a BigInt", async function () {
+    it("should convert a valid string to a BigInt", function () {
         const convertedInput = starknet.shortStringToBigInt(inputString);
         expect(convertedInput).to.deep.equal(convertedString);
     });
 
-    it("should convert a string with exactly 31 characters to a BigInt", async function () {
+    it("should convert a string with exactly 31 characters to a BigInt", function () {
         const convertedInput = starknet.shortStringToBigInt(exactString);
         expect(convertedInput).to.deep.equal(convertedExactString);
     });
 
-    it("should convert a BigInt to a string", async function () {
+    it("should convert a BigInt to a string", function () {
         const convertedOutput = starknet.bigIntToShortString(convertedString);
         expect(convertedOutput).to.deep.equal(inputString);
     });
 
-    it("should fail when a string has exactly 32 characters", async function () {
+    it("should fail when a string has exactly 32 characters", function () {
         try {
             starknet.shortStringToBigInt(largeString);
             expect.fail("Should have failed on converting a string with more than 31 characters.");
@@ -41,7 +41,7 @@ describe("Starknet", function () {
         }
     });
 
-    it("should fail when a string has over 31 characters", async function () {
+    it("should fail when a string has over 31 characters", function () {
         try {
             starknet.shortStringToBigInt(invalidLengthString);
             expect.fail("Should have failed on converting a string with more than 31 characters.");
@@ -50,7 +50,7 @@ describe("Starknet", function () {
         }
     });
 
-    it("should fail when a string has a non-standard-ASCII character", async function () {
+    it("should fail when a string has a non-standard-ASCII character", function () {
         try {
             starknet.shortStringToBigInt(invalidCharacterString);
             expect.fail("Should have failed on converting a string with an invalid character.");
@@ -59,7 +59,7 @@ describe("Starknet", function () {
         }
     });
 
-    it("should fail when a string has multiple non-standard-ASCII characters", async function () {
+    it("should fail when a string has multiple non-standard-ASCII characters", function () {
         try {
             starknet.shortStringToBigInt(multipleInvalidCharactersString);
             expect.fail("Should have failed on converting a string with invalid characters.");

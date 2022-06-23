@@ -7,7 +7,8 @@ import {
     AccountImplementationType,
     BlockIdentifier,
     DeployAccountOptions,
-    StarknetContractFactory
+    StarknetContractFactory,
+    Uint256
 } from "./types";
 import { Account, ArgentAccount, OpenZeppelinAccount } from "./account";
 import { checkArtifactExists, findPath, getAccountPath } from "./utils";
@@ -99,6 +100,18 @@ export function getWalletUtil(name: string, hre: HardhatRuntimeEnvironment) {
     }
     wallet.accountPath = getAccountPath(wallet.accountPath, hre);
     return wallet;
+}
+
+export function bigIntToUint256Util(convertableBigInt: BigInt): Uint256 {
+    const lowMask = (BigInt(1) << BigInt(128)) - BigInt(1);
+    return {
+        low: convertableBigInt.valueOf() & lowMask,
+        high: convertableBigInt.valueOf() >> BigInt(128)
+    };
+}
+
+export function uint256ToBigIntUtil(uint256: Uint256): BigInt {
+    return (BigInt(uint256.high) << BigInt(128)) + BigInt(uint256.low);
 }
 
 export async function deployAccountUtil(
