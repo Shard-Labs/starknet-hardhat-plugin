@@ -523,9 +523,10 @@ module.exports = {
 
 By defining/modifying `networks["integratedDevnet"]` in your hardhat config file, you can specify:
 
--   the version of Devnet to be used for the underlying Devnet Docker image
--   a Python environment with installed starknet-devnet (can be active environment); this will avoid using the dockerized version
--   CLI arguments to be used on Devnet startup: [options](https://github.com/Shard-Labs/starknet-devnet/#run)
+- the version of Devnet to be used for the underlying Devnet Docker image
+- a Python environment with installed starknet-devnet (can be active environment); this will avoid using the dockerized version
+- CLI arguments to be used on Devnet startup: [options](https://github.com/Shard-Labs/starknet-devnet/#run)
+- where output should be dumped _(either to the terminal or to a file)_.
 
 ```javascript
 module.exports = {
@@ -541,10 +542,15 @@ module.exports = {
       venv: "<VENV_PATH>",
 
       // or specify Docker image tag
-      dockerizedVersion: "<DEVNET_VERSION>"
+      dockerizedVersion: "<DEVNET_VERSION>",
 
       // optional devnet CLI arguments
-      args: ["--lite-mode", "--gas-price", "2000000000"]
+      args: ["--lite-mode", "--gas-price", "2000000000"],
+
+      // stdout: "logs/stdout.log" <- dumps stdout to the file
+      stdout: "STDOUT", // <- logs stdout to the terminal
+      // stderr: "logs/stderr.log" <- dumps stderr to the file
+      stderr: "STDERR"  // <- logs stderr to the terminal
     }
   }
   ...

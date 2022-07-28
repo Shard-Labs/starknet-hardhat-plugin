@@ -10,8 +10,8 @@ export class DockerDevnet extends IntegratedDevnet {
     private docker: HardhatDocker;
     private args?: string[];
 
-    constructor(private image: Image, host: string, port: string, args?: string[]) {
-        super(host, port);
+    constructor(private image: Image, host: string, port: string, args?: string[], stdout?: string, stderr?: string) {
+        super(host, port, stdout, stderr);
         this.args = args;
     }
 

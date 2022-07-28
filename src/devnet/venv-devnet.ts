@@ -7,8 +7,8 @@ export class VenvDevnet extends IntegratedDevnet {
     private command: string;
     private args?: string[];
 
-    constructor(venvPath: string, host: string, port: string, args?: string[]) {
-        super(host, port);
+    constructor(venvPath: string, host: string, port: string, args?: string[], stdout?: string, stderr?: string) {
+        super(host, port, stdout, stderr);
 
         this.command = "starknet-devnet";
         this.args = args;

@@ -29,7 +29,12 @@ export function createIntegratedDevnet(hre: HardhatRuntimeEnvironment): Integrat
     }
 
     if (devnetNetwork.venv) {
-        return new VenvDevnet(devnetNetwork.venv, hostname, port, devnetNetwork?.args);
+        return new VenvDevnet(
+            devnetNetwork.venv,
+            hostname, port,
+            devnetNetwork?.args,
+            devnetNetwork?.stdout,
+            devnetNetwork?.stderr);
     }
 
     if (hostname === "localhost") {
@@ -49,6 +54,8 @@ export function createIntegratedDevnet(hre: HardhatRuntimeEnvironment): Integrat
         },
         hostname,
         port,
-        devnetNetwork?.args
+        devnetNetwork?.args,
+        devnetNetwork?.stdout,
+        devnetNetwork?.stderr
     );
 }

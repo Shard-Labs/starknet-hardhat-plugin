@@ -2,6 +2,7 @@ import axios from "axios";
 import { ChildProcess } from "child_process";
 import { HardhatPluginError } from "hardhat/plugins";
 import { PLUGIN_NAME } from "../constants";
+import { IntegratedDevnetLogger } from "./integrated-devnet-logger";
 
 function sleep(amountMillis: number): Promise<void> {
     return new Promise((resolve) => {
@@ -9,12 +10,12 @@ function sleep(amountMillis: number): Promise<void> {
     });
 }
 
-export abstract class IntegratedDevnet {
+export abstract class IntegratedDevnet extends IntegratedDevnetLogger {
     protected childProcess: ChildProcess;
-    private lastError: string = null;
     private connected = false;
 
-    constructor(protected host: string, protected port: string) {
+    constructor(protected host: string, protected port: string, protected stdout?: string, protected stderr?: string) {
+        super(stdout, stderr);
         IntegratedDevnet.cleanupFns.push(this.cleanup.bind(this));
     }
 
@@ -36,9 +37,15 @@ export abstract class IntegratedDevnet {
 
         this.childProcess = await this.spawnChildProcess();
 
+        this.childProcess.stdout.on("data", async (chunk) => {
+            chunk = chunk.toString();
+            await this.logStdout(chunk);
+        });
+
         // capture the most recent message from stderr
-        this.childProcess.stderr.on("data", (chunk) => {
-            this.lastError = chunk.toString();
+        this.childProcess.stderr.on("data", async (chunk) => {
+            chunk = chunk.toString();
+            await this.logStderr(chunk);
         });
 
         return new Promise((resolve, reject) => {
@@ -79,9 +86,6 @@ export abstract class IntegratedDevnet {
                     if (this.connected) {
                         const msg = `integrated-devnet exited with code=${code} while processing transactions`;
                         throw new HardhatPluginError(PLUGIN_NAME, msg);
-                    } else {
-                        const msg = `integrated-devnet connect exited with code=${code}:\n${this.lastError}`;
-                        reject(new HardhatPluginError(PLUGIN_NAME, msg));
                     }
                 }
             });
