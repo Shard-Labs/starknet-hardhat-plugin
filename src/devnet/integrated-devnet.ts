@@ -3,7 +3,7 @@ import { ChildProcess } from "child_process";
 import { HardhatPluginError } from "hardhat/plugins";
 import { PLUGIN_NAME } from "../constants";
 
-function sleep(amountMillis: number): Promise<void> {
+export function sleep(amountMillis: number): Promise<void> {
     return new Promise((resolve) => {
         setTimeout(resolve, amountMillis);
     });
