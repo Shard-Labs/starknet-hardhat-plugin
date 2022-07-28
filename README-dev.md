@@ -97,6 +97,7 @@ There are two wrappers around Starknet CLI. They are defined in [starknet-wrappe
 -   Venv wrapper:
     -   for users that already have `cairo-lang` installed
     -   faster than Docker wrapper
+    -   sends Starknet CLI commands to a [proxy server](/src/starknet_cli_wrapper.py) which has the `main` method of Starknet CLI imported.
 
 ## Version management
 

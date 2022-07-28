@@ -1,2 +1,2 @@
-export { IntegratedDevnet } from "./integrated-devnet";
+export { ExternalServer } from "./external-server";
 export { createIntegratedDevnet } from "./create-devnet-wrapper";

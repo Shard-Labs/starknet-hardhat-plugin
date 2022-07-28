@@ -1,17 +1,17 @@
 import { HardhatDocker, Image } from "@nomiclabs/hardhat-docker";
 import { ChildProcess, spawn, spawnSync } from "child_process";
 
-import { IntegratedDevnet } from "./integrated-devnet";
+import { ExternalServer } from "./external-server";
 
 const CONTAINER_NAME = "integrated-devnet";
 const DEVNET_DOCKER_INTERNAL_PORT = 5050;
 
-export class DockerDevnet extends IntegratedDevnet {
+export class DockerDevnet extends ExternalServer {
     private docker: HardhatDocker;
     private args?: string[];
 
     constructor(private image: Image, host: string, port: string, args?: string[]) {
-        super(host, port);
+        super(host, port, "is_alive", "integrated-devnet");
         this.args = args;
     }
 

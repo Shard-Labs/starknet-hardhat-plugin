@@ -1,7 +1,7 @@
 import * as path from "path";
 import { task, extendEnvironment, extendConfig } from "hardhat/config";
 import { HardhatPluginError, lazyObject } from "hardhat/plugins";
-import { HardhatConfig, HardhatUserConfig } from "hardhat/types";
+import { HardhatConfig, HardhatRuntimeEnvironment, HardhatUserConfig } from "hardhat/types";
 import exitHook from "exit-hook";
 
 import "./type-extensions";
@@ -50,11 +50,11 @@ import {
     getBlockUtil
 } from "./extend-utils";
 import { DevnetUtils } from "./devnet-utils";
-import { IntegratedDevnet } from "./devnet";
+import { ExternalServer } from "./devnet";
 import { StarknetChainId } from "starknet/constants";
 
 exitHook(() => {
-    IntegratedDevnet.cleanAll();
+    ExternalServer.cleanAll();
 });
 
 // copy all user-defined cairo settings; other extendConfig calls will overwrite if needed
@@ -146,16 +146,20 @@ extendConfig((config: HardhatConfig, userConfig: Readonly<HardhatUserConfig>) =>
     config.starknet.networkConfig = networkConfig;
 });
 
+function setVenvWrapper(hre: HardhatRuntimeEnvironment, venvPath: string) {
+    if (hre.config.starknet.dockerizedVersion) {
+        const msg =
+            "Error in config file. Only one of (starknet.dockerizedVersion, starknet.venv) can be specified.";
+        throw new HardhatPluginError(PLUGIN_NAME, msg);
+    }
+    hre.starknetWrapper = new VenvWrapper(venvPath);
+}
+
 // add venv wrapper or docker wrapper of starknet
 extendEnvironment((hre) => {
     const venvPath = hre.config.starknet.venv;
     if (venvPath) {
-        if (hre.config.starknet.dockerizedVersion) {
-            const msg =
-                "Error in config file. Only one of (starknet.dockerizedVersion, starknet.venv) can be specified.";
-            throw new HardhatPluginError(PLUGIN_NAME, msg);
-        }
-        hre.starknetWrapper = new VenvWrapper(venvPath);
+        setVenvWrapper(hre, venvPath);
     } else {
         const repository = CAIRO_CLI_DOCKER_REPOSITORY;
         const tag = getImageTagByArch(
@@ -267,7 +271,10 @@ task("starknet-verify", "Verifies a contract on a Starknet network.")
     .addParam("path", "The path of the main cairo contract (e.g. contracts/contract.cairo)")
     .addParam("address", "The address where the contract is deployed")
     .addParam("compilerVersion", "The compiler version used to compile the cairo contract")
-    .addOptionalParam("accountContract", "The contract type which specifies whether it's an account contract. Omitting it sets false.")
+    .addOptionalParam(
+        "accountContract",
+        "The contract type which specifies whether it's an account contract. Omitting it sets false."
+    )
     .addOptionalParam("license", "The licence of the contract (e.g No License (None))")
     .addOptionalVariadicPositionalParam(
         "paths",

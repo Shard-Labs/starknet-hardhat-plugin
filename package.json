@@ -1,6 +1,6 @@
 {
     "name": "@shardlabs/starknet-hardhat-plugin",
-    "version": "0.6.2",
+    "version": "0.6.3-alpha.2",
     "description": "Plugin for using Starknet tools within Hardhat projects",
     "main": "dist/src/index.js",
     "files": [
@@ -25,7 +25,8 @@
         "test-general-tests": "TEST_SUBDIR=general-tests ./scripts/test.sh",
         "test-venv-tests": "TEST_SUBDIR=venv-tests ./scripts/test.sh",
         "test-integrated-devnet-tests": "TEST_SUBDIR=integrated-devnet-tests ./scripts/test.sh",
-        "build": "rm -rf dist && tsc",
+        "build": "rm -rf dist && tsc && npm run copy-files",
+        "copy-files": "cp src/starknet_cli_wrapper.py dist/src/",
         "lint": "eslint src test"
     },
     "author": "Shard-Labs",

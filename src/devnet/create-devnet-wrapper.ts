@@ -11,9 +11,9 @@ import {
 import { getImageTagByArch, getNetwork } from "../utils";
 import { DockerDevnet } from "./docker-devnet";
 import { VenvDevnet } from "./venv-devnet";
-import { IntegratedDevnet } from "./integrated-devnet";
+import { ExternalServer } from "./external-server";
 
-export function createIntegratedDevnet(hre: HardhatRuntimeEnvironment): IntegratedDevnet {
+export function createIntegratedDevnet(hre: HardhatRuntimeEnvironment): ExternalServer {
     const devnetNetwork = getNetwork<HardhatNetworkConfig>(
         INTEGRATED_DEVNET,
         hre.config.networks,
