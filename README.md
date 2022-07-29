@@ -643,6 +643,26 @@ const contract = ...;
 await contract.invoke("increase_balance", { amount: 1 }, { wallet });
 ```
 
+## Recompilation
+
+Recompilation is performed when contracts are updated or when artifacts are missing. A file will be created with the name `cairo-files-cache.json` to handle caching. Recompilation is handled before the following [CLI commands](#cli-commands) are executed.
+
+- `npx hardhat starknet-deploy`
+- `npx hardhat starknet-invoke`
+- `npx hardhat starknet-call`
+- `npx hardhat run`
+- `npx hardhat test`
+
+This feature is turned off by default and is specified in the `hardhat.config.ts` file.
+
+```typescript
+module.exports = {
+    starknet: {
+        recompile: true // <- to switch recompilation on
+    }
+};
+```
+
 ## Account
 
 An Account can be used to make proxy signed calls/transactions to other contracts.

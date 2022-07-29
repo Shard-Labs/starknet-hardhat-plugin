@@ -25,6 +25,7 @@
         "test-general-tests": "TEST_SUBDIR=general-tests ./scripts/test.sh",
         "test-venv-tests": "TEST_SUBDIR=venv-tests ./scripts/test.sh",
         "test-integrated-devnet-tests": "TEST_SUBDIR=integrated-devnet-tests ./scripts/test.sh",
+        "test-recompilation-tests": "TEST_SUBDIR=recompilation-tests ./scripts/test.sh",
         "build": "rm -rf dist && tsc",
         "lint": "eslint src test"
     },

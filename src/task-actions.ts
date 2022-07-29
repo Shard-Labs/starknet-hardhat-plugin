@@ -24,6 +24,7 @@ import {
 } from "hardhat/types";
 import { getWalletUtil } from "./extend-utils";
 import { createIntegratedDevnet } from "./devnet";
+import { Recompiler } from "./recompiler";
 
 
 function checkSourceExists(sourcePath: string): void {
@@ -149,6 +150,7 @@ export async function starknetCompileAction(args: TaskArguments, hre: HardhatRun
         }
         checkSourceExists(sourcesPath);
         const files = await traverseFiles(sourcesPath, "*.cairo");
+        const recompiler = new Recompiler(hre);
         for (const file of files) {
             console.log("Compiling", file);
             const suffix = file.replace(rootRegex, "");
@@ -170,8 +172,11 @@ export async function starknetCompileAction(args: TaskArguments, hre: HardhatRun
                 disableHintValidation: args.disableHintValidation
             });
 
+            // Update cache after compilation
+            await recompiler.updateCache(args, file, outputPath, abiPath, cairoPath);
             statusCode += processExecuted(executed, true);
         }
+        await recompiler.saveCache();
     }
 
     if (statusCode) {
@@ -181,6 +186,7 @@ export async function starknetCompileAction(args: TaskArguments, hre: HardhatRun
 }
 
 export async function starknetDeployAction(args: TaskArguments, hre: HardhatRuntimeEnvironment) {
+    await new Recompiler(hre).handleCache();
     const gatewayUrl = getGatewayUrl(args, hre);
     const defaultArtifactsPath = hre.config.paths.starknetArtifacts;
     const artifactsPaths: string[] = args.paths || [defaultArtifactsPath];
@@ -408,10 +414,12 @@ function handleMultiPartContractVerification(
 }
 
 export async function starknetInvokeAction(args: TaskArguments, hre: HardhatRuntimeEnvironment) {
+    await new Recompiler(hre).handleCache();
     await starknetInteractAction(InteractChoice.INVOKE, args, hre);
 }
 
 export async function starknetCallAction(args: TaskArguments, hre: HardhatRuntimeEnvironment) {
+    await new Recompiler(hre).handleCache();
     await starknetInteractAction(InteractChoice.CALL, args, hre);
 }
 
@@ -566,6 +574,7 @@ export async function starknetTestAction(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
 ) {
+    await new Recompiler(hre).handleCache();
     setRuntimeNetwork(args, hre);
 
     await runWithDevnet(hre, async () => {
@@ -578,6 +587,7 @@ export async function starknetRunAction(
     hre: HardhatRuntimeEnvironment,
     runSuper: RunSuperFunction<TaskArguments>
 ) {
+    await new Recompiler(hre).handleCache();
     setRuntimeNetwork(args, hre);
 
     await runWithDevnet(hre, async () => {

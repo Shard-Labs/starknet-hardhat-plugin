@@ -9,7 +9,7 @@ CONFIG_FILE_NAME="hardhat.config.ts"
 
 # setup example repo
 rm -rf starknet-hardhat-example
-git clone -b plugin --single-branch git@github.com:Shard-Labs/starknet-hardhat-example.git
+git clone -b recompilation --single-branch git@github.com:Shard-Labs/starknet-hardhat-example.git
 cd starknet-hardhat-example
 git log -n 1
 npm install

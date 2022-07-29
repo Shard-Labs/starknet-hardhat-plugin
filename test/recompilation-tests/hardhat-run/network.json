@@ -1,0 +1,4 @@
+{
+    "$schema": "../../network.schema",
+    "devnet": true
+}
